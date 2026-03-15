@@ -5,7 +5,10 @@
       "Bash(netstat:*)",
       "Bash(taskkill:*)",
       "Bash(cmd /c \"taskkill /PID 17860 /F\")",
-      "Bash(cmd /c \"netstat -ano | findstr \\\\\":5173 \\\\|:5174 \\\\\" | findstr LISTENING\")"
+      "Bash(cmd /c \"netstat -ano | findstr \\\\\":5173 \\\\|:5174 \\\\\" | findstr LISTENING\")",
+      "Bash(tasklist:*)",
+      "Bash(cmd /c \"taskkill /PID 17860 /F 2>&1\")",
+      "Bash(powershell -Command \"Stop-Process -Id 17860 -Force\" 2>&1)"
     ]
   }
 }
