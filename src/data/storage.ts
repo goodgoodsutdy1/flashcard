@@ -10,16 +10,27 @@ function getDefaultData(): AppData {
   return { decks: [], cards: [], reviewLogs: [] };
 }
 
+// Fix old audioText like "æ, as in cat" → "cat"
+function migrateCard(card: Card): Card {
+  if (card.audioText && card.audioText.includes(', as in ')) {
+    return { ...card, audioText: card.audioText.split(', as in ')[1] };
+  }
+  return card;
+}
+
 export function loadData(): AppData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return getDefaultData();
     const parsed = JSON.parse(raw) as Partial<AppData>;
-    return {
-      decks: parsed.decks ?? [],
-      cards: parsed.cards ?? [],
-      reviewLogs: parsed.reviewLogs ?? [],
-    };
+    const cards = (parsed.cards ?? []).map(migrateCard);
+    // Persist the migration if anything changed
+    if (cards.some((c, i) => c !== (parsed.cards ?? [])[i])) {
+      const migrated = { decks: parsed.decks ?? [], cards, reviewLogs: parsed.reviewLogs ?? [] };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+      return migrated;
+    }
+    return { decks: parsed.decks ?? [], cards, reviewLogs: parsed.reviewLogs ?? [] };
   } catch {
     return getDefaultData();
   }
