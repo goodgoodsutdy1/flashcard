@@ -63,12 +63,6 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 微信内置浏览器提示 */}
-      {/MicroMessenger/i.test(navigator.userAgent) && (
-        <div className="bg-amber-400 text-amber-900 text-sm px-4 py-2.5 text-center font-medium">
-          朗读功能在微信中不可用 · 请点右上角 ··· → 在浏览器中打开
-        </div>
-      )}
       {/* Header */}
       <header className="bg-indigo-600 text-white px-4 pt-safe-top pb-4">
         <div className="max-w-lg mx-auto flex items-center justify-between mt-4">
