@@ -46,9 +46,19 @@ export function FlashCard({ card, onFlip }: FlashCardProps) {
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
           <p className="text-xs font-medium text-indigo-300 uppercase tracking-widest mb-4">释义</p>
-          <p className="text-2xl font-semibold text-white text-center leading-snug">{card.back}</p>
+          {(() => {
+            const lines = card.back.split('\n').filter(Boolean);
+            return lines.length > 1 ? (
+              <>
+                <p className="text-2xl font-bold text-white text-center leading-snug">{lines[0]}</p>
+                <p className="mt-3 text-sm text-indigo-200 text-center leading-relaxed">{lines.slice(1).join(' ')}</p>
+              </>
+            ) : (
+              <p className="text-2xl font-semibold text-white text-center leading-snug">{card.back}</p>
+            );
+          })()}
           {card.example && (
-            <p className="mt-6 text-base text-indigo-200 text-center italic">"{card.example}"</p>
+            <p className="mt-5 text-sm text-indigo-200 text-center italic">"{card.example}"</p>
           )}
         </div>
       </div>

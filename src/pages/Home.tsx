@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { loadData, createDeck, deleteDeck, createCard } from '../data/storage';
-import { PRESET_DECKS } from '../data/presets';
+import { PRESET_DECKS, PRESET_CATEGORIES } from '../data/presets';
 import type { Deck } from '../types';
 
 const CARD_TYPE_LABELS: Record<Deck['cardType'], string> = {
@@ -56,36 +56,53 @@ export function Home() {
 
   const loadedPresetNames = new Set(data.decks.map(d => d.name));
 
+  const availableByCategory = PRESET_CATEGORIES.map(cat => ({
+    cat,
+    presets: PRESET_DECKS.filter(p => p.category === cat && !loadedPresetNames.has(p.deck.name)),
+  })).filter(g => g.presets.length > 0);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-indigo-600 text-white px-4 pt-safe-top pb-4">
-        <div className="max-w-lg mx-auto">
-          <h1 className="text-2xl font-bold mt-4">闪卡</h1>
-          <p className="text-indigo-200 text-sm mt-1">我的卡组</p>
+        <div className="max-w-lg mx-auto flex items-center justify-between mt-4">
+          <div>
+            <h1 className="text-2xl font-bold">闪卡</h1>
+            <p className="text-indigo-200 text-sm mt-0.5">我的卡组</p>
+          </div>
+          {data.reviewLogs.length > 0 && (
+            <Link to="/stats" className="text-indigo-200 hover:text-white text-sm">
+              统计 →
+            </Link>
+          )}
         </div>
       </header>
 
-      <main className="max-w-lg mx-auto px-4 py-6 space-y-4">
-        {/* Preset decks section */}
-        {PRESET_DECKS.some(p => !loadedPresetNames.has(p.deck.name)) && (
-          <section>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">快速开始</h2>
-            <div className="space-y-2">
-              {PRESET_DECKS.filter(p => !loadedPresetNames.has(p.deck.name)).map(preset => (
-                <button
-                  key={preset.deck.name}
-                  onClick={() => handleLoadPreset(preset)}
-                  className="w-full flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-indigo-100 hover:border-indigo-300 transition-colors"
-                >
-                  <div className="text-left">
-                    <p className="font-semibold text-gray-800">{preset.deck.name}</p>
-                    <p className="text-sm text-gray-500">{preset.cards.length} 张 · {CARD_TYPE_LABELS[preset.deck.cardType]}</p>
-                  </div>
-                  <span className="text-indigo-500 text-sm font-medium">Add →</span>
-                </button>
-              ))}
-            </div>
+      <main className="max-w-lg mx-auto px-4 py-6 space-y-6">
+        {/* Preset decks by category */}
+        {availableByCategory.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">快速开始</h2>
+            {availableByCategory.map(({ cat, presets }) => (
+              <div key={cat}>
+                <p className="text-xs font-medium text-gray-400 mb-2 pl-1">{cat}</p>
+                <div className="space-y-2">
+                  {presets.map(preset => (
+                    <button
+                      key={preset.deck.name}
+                      onClick={() => handleLoadPreset(preset)}
+                      className="w-full flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-indigo-100 hover:border-indigo-300 transition-colors"
+                    >
+                      <div className="text-left">
+                        <p className="font-semibold text-gray-800">{preset.deck.name}</p>
+                        <p className="text-sm text-gray-500">{preset.cards.length} 张 · {CARD_TYPE_LABELS[preset.deck.cardType]}</p>
+                      </div>
+                      <span className="text-indigo-500 text-sm font-medium flex-shrink-0 ml-3">+ 添加</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </section>
         )}
 
@@ -193,13 +210,6 @@ export function Home() {
           >
             + 新建卡组
           </button>
-        )}
-
-        {/* Stats link */}
-        {data.reviewLogs.length > 0 && (
-          <Link to="/stats" className="block text-center text-sm text-indigo-500 hover:text-indigo-700 py-2">
-            查看学习统计 →
-          </Link>
         )}
       </main>
     </div>
