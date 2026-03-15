@@ -1,127 +1,55 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 interface TTSButtonProps {
   text: string;
   className?: string;
 }
 
-declare global {
-  interface Window {
-    responsiveVoice?: {
-      speak: (text: string, voice: string, params?: object) => void;
-      cancel: () => void;
-      isPlaying: () => boolean;
-    };
-  }
-}
-
-const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-const hasNativeTTS = !isWeChat && 'speechSynthesis' in window;
-
-function youdaoUrl(text: string) {
-  return `https://dict.youdao.com/dictvoice?type=0&audio=${encodeURIComponent(text)}`;
-}
-
 export function TTSButton({ text, className = '' }: TTSButtonProps) {
   const [speaking, setSpeaking] = useState(false);
-  const [rvReady, setRvReady] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [supported, setSupported] = useState(true);
 
   useEffect(() => {
-    if (hasNativeTTS) return;
-    const timer = setInterval(() => {
-      if (window.responsiveVoice) { setRvReady(true); clearInterval(timer); }
-    }, 200);
-    return () => clearInterval(timer);
+    setSupported('speechSynthesis' in window);
+    return () => { window.speechSynthesis?.cancel(); };
   }, []);
-
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-      window.speechSynthesis?.cancel();
-      window.responsiveVoice?.cancel();
-    };
-  }, []);
-
-  const fallbackSpeak = () => {
-    if (hasNativeTTS) {
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'en-US';
-      utter.rate = 0.9;
-      const setVoice = () => {
-        const voices = window.speechSynthesis.getVoices();
-        const v = voices.find(v => v.lang === 'en-US' && v.localService)
-          ?? voices.find(v => v.lang.startsWith('en'));
-        if (v) utter.voice = v;
-      };
-      setVoice();
-      if (!window.speechSynthesis.getVoices().length)
-        window.speechSynthesis.addEventListener('voiceschanged', setVoice, { once: true });
-      utter.onstart = () => setSpeaking(true);
-      utter.onend = () => setSpeaking(false);
-      utter.onerror = () => setSpeaking(false);
-      window.speechSynthesis.speak(utter);
-    } else if (window.responsiveVoice) {
-      window.responsiveVoice.cancel();
-      setSpeaking(true);
-      window.responsiveVoice.speak(text, 'US English Female', {
-        rate: 0.9,
-        onend: () => setSpeaking(false),
-        onerror: () => setSpeaking(false),
-      });
-    } else {
-      setSpeaking(false);
-    }
-  };
 
   const speak = () => {
-    // Stop any current playback
-    audioRef.current?.pause();
-    window.speechSynthesis?.cancel();
-    window.responsiveVoice?.cancel();
-    setSpeaking(true);
+    if (!supported) return;
+    window.speechSynthesis.cancel();
 
-    // Try Youdao first
-    const audio = new Audio(youdaoUrl(text));
-    audioRef.current = audio;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 0.9;
 
-    // If no sound starts within 2s, fall back
-    const fallbackTimer = setTimeout(() => {
-      if (audioRef.current === audio) {
-        audio.pause();
-        audioRef.current = null;
-        fallbackSpeak();
-      }
-    }, 2000);
-
-    audio.onended = () => {
-      clearTimeout(fallbackTimer);
-      setSpeaking(false);
-      audioRef.current = null;
+    const setVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const enVoice = voices.find(v => v.lang === 'en-US' && v.localService)
+        ?? voices.find(v => v.lang.startsWith('en'));
+      if (enVoice) utter.voice = enVoice;
     };
 
-    audio.onerror = () => {
-      clearTimeout(fallbackTimer);
-      audioRef.current = null;
-      fallbackSpeak();
-    };
+    setVoice();
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.addEventListener('voiceschanged', setVoice, { once: true });
+    }
 
-    audio.play().catch(() => {
-      clearTimeout(fallbackTimer);
-      audioRef.current = null;
-      fallbackSpeak();
-    });
+    utter.onstart = () => setSpeaking(true);
+    utter.onend = () => setSpeaking(false);
+    utter.onerror = () => setSpeaking(false);
+
+    window.speechSynthesis.speak(utter);
   };
-
-  const supported = hasNativeTTS || rvReady || true; // Youdao always available as first try
 
   return (
     <button
       onClick={(e) => { e.stopPropagation(); speak(); }}
-      title="朗读"
+      disabled={!supported}
+      title={supported ? '朗读' : '当前浏览器不支持朗读'}
       className={`inline-flex items-center justify-center rounded-full ${
-        speaking
+        !supported
+          ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+          : speaking
           ? 'bg-indigo-100 text-indigo-600'
           : 'bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600'
       } ${className}`}
