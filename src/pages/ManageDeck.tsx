@@ -92,7 +92,7 @@ export function ManageDeck() {
     refresh();
   };
 
-  if (!deck) return <div className="flex items-center justify-center min-h-screen"><p className="text-gray-400">Loading...</p></div>;
+  if (!deck) return <div className="flex items-center justify-center min-h-screen"><p className="text-gray-400">加载中...</p></div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -111,8 +111,8 @@ export function ManageDeck() {
                 onChange={e => setDeckNameForm(e.target.value)}
                 className="flex-1 border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
               />
-              <button type="submit" className="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg">Save</button>
-              <button type="button" onClick={() => setEditDeckName(false)} className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-lg">Cancel</button>
+              <button type="submit" className="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg">保存</button>
+              <button type="button" onClick={() => setEditDeckName(false)} className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-lg">取消</button>
             </form>
           ) : (
             <button
@@ -131,32 +131,32 @@ export function ManageDeck() {
         {/* Card form */}
         {showForm && (
           <form onSubmit={handleSubmitCard} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-3">
-            <h3 className="font-semibold text-gray-800">{editCard ? 'Edit Card' : 'New Card'}</h3>
+            <h3 className="font-semibold text-gray-800">{editCard ? '编辑卡片' : '新建卡片'}</h3>
             <div className="space-y-2">
-              <input required type="text" placeholder="Front (word / symbol)" value={form.front}
+              <input required type="text" placeholder="正面（单词/符号）" value={form.front}
                 onChange={e => setForm(p => ({ ...p, front: e.target.value }))}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              <textarea required placeholder="Back (definition)" value={form.back}
+              <textarea required placeholder="背面（释义）" value={form.back}
                 onChange={e => setForm(p => ({ ...p, back: e.target.value }))}
                 rows={2}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none" />
-              <input type="text" placeholder="Phonetic (optional, e.g. /wɜːrd/)" value={form.phonetic}
+              <input type="text" placeholder="音标（可选，如 /wɜːrd/）" value={form.phonetic}
                 onChange={e => setForm(p => ({ ...p, phonetic: e.target.value }))}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              <input type="text" placeholder="Example sentence (optional)" value={form.example}
+              <input type="text" placeholder="例句（可选）" value={form.example}
                 onChange={e => setForm(p => ({ ...p, example: e.target.value }))}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              <input type="text" placeholder="TTS text (defaults to front)" value={form.audioText}
+              <input type="text" placeholder="朗读文本（默认同正面）" value={form.audioText}
                 onChange={e => setForm(p => ({ ...p, audioText: e.target.value }))}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
             </div>
             <div className="flex gap-2">
               <button type="submit" className="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-                {editCard ? 'Save Changes' : 'Add Card'}
+                {editCard ? '保存修改' : '添加卡片'}
               </button>
               <button type="button" onClick={() => { setShowForm(false); setEditCard(null); setForm(emptyForm); }}
                 className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-600">
-                Cancel
+                取消
               </button>
             </div>
           </form>
@@ -175,9 +175,9 @@ export function ManageDeck() {
                   <p className="text-sm text-gray-500 line-clamp-2 mt-0.5">{card.back}</p>
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className={`text-xs px-2 py-0.5 rounded-full ${isDue ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}`}>
-                      {isDue ? 'Due' : `Due ${dueDate}`}
+                      {isDue ? '待复习' : `${dueDate} 复习`}
                     </span>
-                    <span className="text-xs text-gray-400">×{card.repetitions} reviews</span>
+                    <span className="text-xs text-gray-400">已复习 {card.repetitions} 次</span>
                   </div>
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
@@ -200,12 +200,12 @@ export function ManageDeck() {
             onClick={() => { setShowForm(true); setEditCard(null); setForm(emptyForm); }}
             className="w-full py-3 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 text-sm font-medium hover:border-indigo-300 hover:text-indigo-500 transition-colors"
           >
-            + Add Card
+            + 添加卡片
           </button>
         )}
 
         {cards.length === 0 && !showForm && (
-          <p className="text-center text-gray-400 text-sm py-8">No cards yet. Add your first card!</p>
+          <p className="text-center text-gray-400 text-sm py-8">还没有卡片，添加第一张吧！</p>
         )}
       </main>
     </div>

@@ -52,8 +52,8 @@ export function TTSButton({ text, className = '' }: TTSButtonProps) {
           ? 'bg-indigo-100 text-indigo-700'
           : 'bg-gray-100 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600'
       } ${className}`}
-      aria-label="Listen to pronunciation"
-      title="Listen"
+      aria-label="朗读发音"
+      title="朗读"
     >
       {speaking ? (
         <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">

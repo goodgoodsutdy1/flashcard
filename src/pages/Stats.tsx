@@ -69,7 +69,7 @@ export function Stats() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <h1 className="font-semibold text-gray-800">Learning Stats</h1>
+          <h1 className="font-semibold text-gray-800">学习统计</h1>
         </div>
       </header>
 
@@ -77,10 +77,10 @@ export function Stats() {
         {/* Overview cards */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Total Cards', value: stats.totalCards, color: 'text-gray-800' },
-            { label: 'Due Today', value: stats.dueCards, color: 'text-orange-600' },
-            { label: 'Mastered', value: stats.masteredCards, color: 'text-green-600' },
-            { label: 'Reviewed Today', value: stats.reviewsToday, color: 'text-indigo-600' },
+            { label: '总卡片数', value: stats.totalCards, color: 'text-gray-800' },
+            { label: '今日待复习', value: stats.dueCards, color: 'text-orange-600' },
+            { label: '已掌握', value: stats.masteredCards, color: 'text-green-600' },
+            { label: '今日已复习', value: stats.reviewsToday, color: 'text-indigo-600' },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
               <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
@@ -91,7 +91,7 @@ export function Stats() {
 
         {/* 7-day activity chart */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Last 7 Days</h2>
+          <h2 className="text-sm font-semibold text-gray-700 mb-4">最近 7 天</h2>
           <div className="flex items-end gap-2 h-24">
             {stats.last7Days.map(day => (
               <div key={day.key} className="flex-1 flex flex-col items-center gap-1">
@@ -110,10 +110,10 @@ export function Stats() {
 
         {/* Summary */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-3">
-          <h2 className="text-sm font-semibold text-gray-700">Overview</h2>
+          <h2 className="text-sm font-semibold text-gray-700">总览</h2>
           {[
-            { label: 'Total Reviews', value: stats.totalReviews },
-            { label: 'Avg. Quality Score', value: stats.avgQuality },
+            { label: '累计复习次数', value: stats.totalReviews },
+            { label: '平均质量评分', value: stats.avgQuality },
           ].map(s => (
             <div key={s.label} className="flex justify-between text-sm">
               <span className="text-gray-500">{s.label}</span>
@@ -125,16 +125,16 @@ export function Stats() {
         {/* Per-deck stats */}
         {stats.deckStats.length > 0 && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">By Deck</h2>
+            <h2 className="text-sm font-semibold text-gray-700 mb-3">各卡组</h2>
             <div className="space-y-3">
               {stats.deckStats.map(({ deck, total, due, reviews }) => (
                 <div key={deck.id} className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-700 truncate">{deck.name}</p>
-                    <p className="text-xs text-gray-400">{total} cards · {reviews} reviews</p>
+                    <p className="text-xs text-gray-400">{total} 张 · 已复习 {reviews} 次</p>
                   </div>
                   {due > 0 && (
-                    <span className="ml-2 text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">{due} due</span>
+                    <span className="ml-2 text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">{due} 待复习</span>
                   )}
                 </div>
               ))}

@@ -33,7 +33,7 @@ export function FlashCard({ card, onFlip }: FlashCardProps) {
           className="absolute inset-0 bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-8 border border-gray-100"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <p className="text-xs font-medium text-indigo-400 uppercase tracking-widest mb-4">Tap to reveal</p>
+          <p className="text-xs font-medium text-indigo-400 uppercase tracking-widest mb-4">点击翻转</p>
           <p className="text-4xl font-bold text-gray-800 text-center leading-tight">{card.front}</p>
           {card.phonetic && (
             <p className="mt-4 text-xl text-gray-400 font-mono">{card.phonetic}</p>
@@ -45,7 +45,7 @@ export function FlashCard({ card, onFlip }: FlashCardProps) {
           className="absolute inset-0 bg-indigo-600 rounded-2xl shadow-lg flex flex-col items-center justify-center p-8"
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
-          <p className="text-xs font-medium text-indigo-300 uppercase tracking-widest mb-4">Definition</p>
+          <p className="text-xs font-medium text-indigo-300 uppercase tracking-widest mb-4">释义</p>
           <p className="text-2xl font-semibold text-white text-center leading-snug">{card.back}</p>
           {card.example && (
             <p className="mt-6 text-base text-indigo-200 text-center italic">"{card.example}"</p>

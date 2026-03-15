@@ -64,8 +64,8 @@ export function Review() {
         <div className="max-w-sm w-full text-center space-y-6">
           <div className="text-6xl">🎉</div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">Session Complete!</h2>
-            <p className="text-gray-500 mt-2">You reviewed {reviewed} card{reviewed !== 1 ? 's' : ''}.</p>
+            <h2 className="text-2xl font-bold text-gray-800">本轮完成！</h2>
+            <p className="text-gray-500 mt-2">本次复习了 {reviewed} 张卡片。</p>
           </div>
           <div className="space-y-2">
             {deckId && (
@@ -82,11 +82,11 @@ export function Review() {
                 }}
                 className="block w-full py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700"
               >
-                Review Again
+                再复习一遍
               </Link>
             )}
             <Link to="/" className="block w-full py-3 bg-gray-100 text-gray-600 rounded-xl font-medium hover:bg-gray-200">
-              Back to Home
+              返回首页
             </Link>
           </div>
         </div>
@@ -97,7 +97,7 @@ export function Review() {
   if (!currentCard) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-400">Loading...</p>
+        <p className="text-gray-400">加载中...</p>
       </div>
     );
   }
@@ -155,7 +155,7 @@ export function Review() {
         </div>
 
         {!flipped && (
-          <p className="text-center text-sm text-gray-400">Tap the card to reveal the answer</p>
+          <p className="text-center text-sm text-gray-400">点击卡片查看答案</p>
         )}
       </main>
     </div>

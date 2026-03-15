@@ -61,8 +61,8 @@ export function Home() {
       {/* Header */}
       <header className="bg-indigo-600 text-white px-4 pt-safe-top pb-4">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-2xl font-bold mt-4">Flashcard</h1>
-          <p className="text-indigo-200 text-sm mt-1">Your decks</p>
+          <h1 className="text-2xl font-bold mt-4">闪卡</h1>
+          <p className="text-indigo-200 text-sm mt-1">我的卡组</p>
         </div>
       </header>
 
@@ -70,7 +70,7 @@ export function Home() {
         {/* Preset decks section */}
         {PRESET_DECKS.some(p => !loadedPresetNames.has(p.deck.name)) && (
           <section>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Get Started</h2>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">快速开始</h2>
             <div className="space-y-2">
               {PRESET_DECKS.filter(p => !loadedPresetNames.has(p.deck.name)).map(preset => (
                 <button
@@ -80,7 +80,7 @@ export function Home() {
                 >
                   <div className="text-left">
                     <p className="font-semibold text-gray-800">{preset.deck.name}</p>
-                    <p className="text-sm text-gray-500">{preset.cards.length} cards · {CARD_TYPE_LABELS[preset.deck.cardType]}</p>
+                    <p className="text-sm text-gray-500">{preset.cards.length} 张 · {CARD_TYPE_LABELS[preset.deck.cardType]}</p>
                   </div>
                   <span className="text-indigo-500 text-sm font-medium">Add →</span>
                 </button>
@@ -92,7 +92,7 @@ export function Home() {
         {/* My decks */}
         {data.decks.length > 0 && (
           <section>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">My Decks</h2>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">我的卡组</h2>
             <div className="space-y-2">
               {data.decks.map(deck => {
                 const total = getCardCount(deck.id);
@@ -103,7 +103,7 @@ export function Home() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-800 truncate">{deck.name}</p>
-                          <p className="text-sm text-gray-500 mt-0.5">{CARD_TYPE_LABELS[deck.cardType]} · {total} cards</p>
+                          <p className="text-sm text-gray-500 mt-0.5">{CARD_TYPE_LABELS[deck.cardType]} · {total} 张</p>
                           {deck.description && (
                             <p className="text-sm text-gray-400 mt-1 line-clamp-2">{deck.description}</p>
                           )}
@@ -123,18 +123,18 @@ export function Home() {
                               : 'bg-gray-100 text-gray-400 pointer-events-none'
                           }`}
                         >
-                          {due > 0 ? `Review ${due}` : 'All done ✓'}
+                          {due > 0 ? `复习 ${due}` : '今日已完成 ✓'}
                         </Link>
                         <Link
                           to={`/deck/${deck.id}`}
                           className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                         >
-                          Manage
+                          管理
                         </Link>
                         <button
                           onClick={() => handleDeleteDeck(deck.id, deck.name)}
                           className="px-3 py-2 rounded-lg text-sm font-medium bg-red-50 text-red-400 hover:bg-red-100 transition-colors"
-                          aria-label="Delete deck"
+                          aria-label="删除卡组"
                         >
                           ✕
                         </button>
@@ -150,19 +150,19 @@ export function Home() {
         {/* New deck form */}
         {showNewDeck ? (
           <form onSubmit={handleCreateDeck} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-3">
-            <h3 className="font-semibold text-gray-800">New Deck</h3>
+            <h3 className="font-semibold text-gray-800">新建卡组</h3>
             <input
               autoFocus
               required
               type="text"
-              placeholder="Deck name"
+              placeholder="卡组名称"
               value={form.name}
               onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
             <input
               type="text"
-              placeholder="Description (optional)"
+              placeholder="描述（可选）"
               value={form.description}
               onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -172,17 +172,17 @@ export function Home() {
               onChange={e => setForm(p => ({ ...p, cardType: e.target.value as Deck['cardType'] }))}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             >
-              <option value="custom">Custom</option>
-              <option value="word">Word</option>
-              <option value="vowel">Vowel</option>
-              <option value="consonant">Consonant</option>
+              <option value="custom">自定义</option>
+              <option value="word">词汇</option>
+              <option value="vowel">元音</option>
+              <option value="consonant">辅音</option>
             </select>
             <div className="flex gap-2">
               <button type="submit" className="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-                Create
+                创建
               </button>
               <button type="button" onClick={() => setShowNewDeck(false)} className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-600">
-                Cancel
+                取消
               </button>
             </div>
           </form>
@@ -191,14 +191,14 @@ export function Home() {
             onClick={() => setShowNewDeck(true)}
             className="w-full py-3 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 text-sm font-medium hover:border-indigo-300 hover:text-indigo-500 transition-colors"
           >
-            + New Deck
+            + 新建卡组
           </button>
         )}
 
         {/* Stats link */}
         {data.reviewLogs.length > 0 && (
           <Link to="/stats" className="block text-center text-sm text-indigo-500 hover:text-indigo-700 py-2">
-            View learning stats →
+            查看学习统计 →
           </Link>
         )}
       </main>
